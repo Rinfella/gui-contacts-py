@@ -1,4 +1,4 @@
 .git/
 bubble/
 contacts.sqlite
-
+__pycache__/
