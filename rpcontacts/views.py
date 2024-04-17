@@ -23,7 +23,7 @@ from .model import ContactsModel
 class Window(QMainWindow):
     """Main Window"""
     def __init__(self, parent=None):
-        """Initilaizer"""
+        """Initializer"""
         super().__init__(parent)
         self.setWindowTitle("Contacts")
         self.resize(800, 600)
@@ -31,7 +31,6 @@ class Window(QMainWindow):
         self.setCentralWidget(self.centralWidget)
         self.layout = QHBoxLayout()
         self.centralWidget.setLayout(self.layout)
-        
         self.contactsModel = ContactsModel()
         self.setupUI()
 
@@ -53,65 +52,10 @@ class Window(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.addButton)
         layout.addWidget(self.deleteButton)
-        layout.addStrech()
+        layout.addStretch()
         layout.addWidget(self.clearAllButton)
         self.layout.addWidget(self.table)
         self.layout.addLayout(layout)
-
-class AddDialog(QDialog):
-    """Add Contact dialog"""
-    def __init__(self, parent=None):
-        """Initializer"""
-        super().__init__(parent=parent)
-        self.setWindowTitle("Add Contact")
-        self.layout = QVBoxLayout()
-        self.setLayout(self.layout)
-        self.data = None
-
-
-        self.setupUI()
-
-    def setupUI(self):
-        """Set the Add Contact dialog's GUI"""
-        # Create line edits fot the data fields
-        self.nameField = QLineEdit()
-        self.nameField.setObjectName("Name")
-        self.jobField = QLineEdit()
-        self.jobField.setObjectName("Job")
-        self.emailField = QLineEdit()
-        self.emailField.setObjectName("Email")
-
-        # Lay out the fields
-        layout.addrow("Name:", self.nameField)
-        layout.addrow("Job:", self.jobField)
-        layout.addrow("Email:", self.emailField)
-        self.layout.addLayout(layout)
-
-        # Add standard buttons tyo the dialog and connect them
-        self.buttonsBox = QDialogButtonBox(self)
-        self.buttonsBox.setOrientation(Qt.Horizontal)
-        self.buttonsBox.setStandardButtons(
-            QDialogButtonBox.Cancel | QDialogButtonBox.Ok
-        )
-        self.buttonsBox.accepted.connect(self.accept)
-        self.buttonsBox.rejected.connect(self.reject)
-        self.layout.addWidget(self.buttonsBox)
-
-    def accept(self):
-        """Accept the data provided through the dialog."""
-        self.data = []
-        for field in (self.nameField, self.jobField, self.emailField):
-            if not field.tezt():
-                QMessageBox.critical(
-                    self,
-                    "Error!",
-                    f"You must provide a contact's {field.objectName()}",
-                )
-                self.data = None  # Resets .data
-                return
-            
-            self.data.append(field.text())
-        super().accept()
 
     def openAddDialog(self):
         """Open the Add Contact dialog"""
@@ -119,7 +63,7 @@ class AddDialog(QDialog):
         if dialog.exec() == QDialog.Accepted:
             self.contactsModel.addContact(dialog.data)
             self.table.resizeColumnsToContents()
-
+    
     def deleteContact(self):
         """Delete the selected contact from the database"""
         row = self.table.currentIndex().row()
@@ -149,3 +93,60 @@ class AddDialog(QDialog):
         if messageBox == QMessageBox.Ok:
             self.contactsModel.clearContacts()
             self.table.resizeColumnsToContents()
+
+class AddDialog(QDialog):
+    """Add Contact dialog"""
+    def __init__(self, parent=None):
+        """Initializer"""
+        super().__init__(parent=parent)
+        self.setWindowTitle("Add Contact")
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+        self.data = None
+        self.setupUI()
+
+    def setupUI(self):
+        """Set the Add Contact dialog's GUI"""
+        # Create line edits fot the data fields
+        self.nameField = QLineEdit()
+        self.nameField.setObjectName("Name")
+        self.jobField = QLineEdit()
+        self.jobField.setObjectName("Job")
+        self.emailField = QLineEdit()
+        self.emailField.setObjectName("Email")
+
+        # Lay out the fields
+        layout = QFormLayout()
+
+        layout.addRow("Name:", self.nameField)
+        layout.addRow("Job:", self.jobField)
+        layout.addRow("Email:", self.emailField)
+        self.layout.addLayout(layout)
+
+        # Add standard buttons tyo the dialog and connect them
+        self.buttonsBox = QDialogButtonBox(self)
+        self.buttonsBox.setOrientation(Qt.Horizontal)
+        self.buttonsBox.setStandardButtons(
+            QDialogButtonBox.Cancel | QDialogButtonBox.Ok
+        )
+        self.buttonsBox.accepted.connect(self.accept)
+        self.buttonsBox.rejected.connect(self.reject)
+        self.layout.addWidget(self.buttonsBox)
+
+    def accept(self):
+        """Accept the data provided through the dialog."""
+        self.data = []
+        for field in (self.nameField, self.jobField, self.emailField):
+            if not field.text():
+                QMessageBox.critical(
+                    self,
+                    "Error!",
+                    f"You must provide a contact's {field.objectName()}",
+                )
+                self.data = None  # Resets .data
+                return
+            
+            self.data.append(field.text())
+        super().accept()
+
+    

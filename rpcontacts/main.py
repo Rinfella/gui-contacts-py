@@ -12,15 +12,15 @@ from .views import Window
 
 def main():
     """RP Contacts main function"""
-    # Create application
-    app = QApplication(sys.argv)
     # Connect to the database before creating any window
     if not createConnection("contacts.sqlite"):
         sys.exit("Could not connect to the database.")
+    # Create application
+    app = QApplication(sys.argv)
     # Create and show main window
     win = Window()
     win.show()
     # Run the event loop
     sys.exit(app.exec_())
-    
+
 
